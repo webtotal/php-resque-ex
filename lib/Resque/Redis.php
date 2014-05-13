@@ -6,7 +6,7 @@ if (class_exists('Redis'))
 	{
 		private static $defaultNamespace = 'resque:';
 
-		public function __construct($host, $port, $timeout = 5)
+		public function __construct($host, $port, $timeout = 5, $password = null)
 		{
 			parent::__construct();
 
@@ -15,6 +15,10 @@ if (class_exists('Redis'))
 			$this->timeout = $timeout;
 
 			$this->establishConnection();
+
+			if ($password !== null) {
+				$this->auth($password);
+			}
 		}
 
 		function establishConnection()

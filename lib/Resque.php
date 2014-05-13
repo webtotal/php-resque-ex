@@ -41,6 +41,11 @@ class Resque
 	 protected static $pid = null;
 
 	/**
+	 * @var string password for the redis database
+	 */
+	protected static $password = null;
+
+	/**
 	 * Given a host/port combination separated by a colon, set it as
 	 * the redis server that Resque will talk to.
 	 *
@@ -48,12 +53,13 @@ class Resque
 	 *                      a nested array of servers with host/port pairs.
 	 * @param int $database
 	 */
-	public static function setBackend($server, $database = 0, $namespace = 'resque')
+	public static function setBackend($server, $database = 0, $namespace = 'resque', $password = null)
 	{
 		self::$redisServer   = $server;
 		self::$redisDatabase = $database;
 		self::$redis         = null;
 		self::$namespace 	 = $namespace;
+		self::$password      = $password;
 	}
 
 	/**
@@ -93,7 +99,7 @@ class Resque
 				$port = null;
 			}
 			require_once dirname(__FILE__) . '/Resque/Redis.php';
-			$redisInstance = new Resque_Redis($host, $port);
+			$redisInstance = new Resque_Redis($host, $port, 5, self::$password);
 			$redisInstance->prefix(self::$namespace);
 			self::$redis = $redisInstance;
 		}
